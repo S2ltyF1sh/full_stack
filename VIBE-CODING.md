@@ -1,6 +1,6 @@
 # Vibe Coding 规范
 
-本文件约束 AI 辅助开发时的提问、实现、验证和提交方式，适用于本项目的 Vue 3 前端与 Node.js + Express 后端。
+本文件约束 AI 辅助开发时的提问、实现、验证和提交方式，适用于本项目的 Vue 3 前端与 Spring Boot + MySQL 后端。
 
 ## 工作流程
 

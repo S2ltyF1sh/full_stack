@@ -5,7 +5,7 @@
 本 README 是本项目的**规格与边界单一来源**，主要读者是项目作者与 AI 助手。写代码前先看「MVP」与「不做清单」，超出边界的改动必须先在本文档中确认，再动手。
 
 - `frontend`：Vue 3 + Vite 前端
-- `backend`：Node.js + Express 后端
+- `backend`：Spring Boot + JPA + MySQL 后端
 - 部署：Linux + Docker Compose + Nginx
 
 ---
@@ -120,8 +120,8 @@ MVP 内允许的简化（先记账，后补）：
 ### 4.3 技术约束（沿用现有栈，不擅自更换）
 
 - 前端：Vue 3 + Vite，`/api` 前缀请求后端，开发期由 Vite 代理；
-- 后端：Node.js + Express，REST 风格 JSON 接口，统一错误响应格式；
-- 数据：MVP 先用单库持久化，不引入微服务、消息队列、缓存中间件；
+- 后端：Spring Boot 2.7 + Java 8，REST 风格 JSON 接口，统一错误响应格式；
+- 数据：MySQL 单库持久化，JPA 管理实体，不引入微服务、消息队列、缓存中间件；
 - 部署：Docker Compose 编排前后端，Nginx 负责静态资源与反向代理，运行在 Linux。
 
 ### 4.4 主链路验收（端到端）
@@ -194,15 +194,15 @@ npm run dev
 ```
 
 ```powershell
+docker compose up -d mysql
 cd backend
-npm install
-npm run dev
+mvn spring-boot:run
 ```
 
 前端默认地址：`http://localhost:5173`
 后端默认地址：`http://localhost:3000`
 
-当前后端仅提供健康检查 `GET /api/health`，前端首页按钮可验证前后端连通性。
+当前后端提供健康检查 `GET /api/health`，前端首页按钮可验证前后端连通性。订单状态图见 [docs/order-state.md](./docs/order-state.md)，核心 ER 图见 [docs/core-er.md](./docs/core-er.md)。
 
 ---
 
