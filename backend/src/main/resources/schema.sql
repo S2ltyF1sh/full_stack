@@ -18,11 +18,24 @@ CREATE TABLE IF NOT EXISTS services (
   created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
 
+CREATE TABLE IF NOT EXISTS time_slots (
+  id BIGINT PRIMARY KEY AUTO_INCREMENT,
+  service_id BIGINT NOT NULL,
+  starts_at DATETIME NOT NULL,
+  ends_at DATETIME NOT NULL,
+  capacity INT NOT NULL DEFAULT 1,
+  booked_count INT NOT NULL DEFAULT 0,
+  is_available BOOLEAN NOT NULL DEFAULT TRUE,
+  CONSTRAINT fk_time_slots_service FOREIGN KEY (service_id) REFERENCES services(id),
+  UNIQUE KEY uk_time_slots_service_start (service_id, starts_at)
+);
+
 CREATE TABLE IF NOT EXISTS orders (
   id BIGINT PRIMARY KEY AUTO_INCREMENT,
   customer_id BIGINT NOT NULL,
   staff_id BIGINT NULL,
   service_id BIGINT NOT NULL,
+  time_slot_id BIGINT NULL,
   status ENUM('PENDING', 'ASSIGNED', 'IN_PROGRESS', 'COMPLETED', 'CANCELLED') NOT NULL DEFAULT 'PENDING',
   scheduled_at DATETIME NOT NULL,
   total_amount DECIMAL(10, 2) NOT NULL,
@@ -30,6 +43,7 @@ CREATE TABLE IF NOT EXISTS orders (
   CONSTRAINT fk_orders_customer FOREIGN KEY (customer_id) REFERENCES users(id),
   CONSTRAINT fk_orders_staff FOREIGN KEY (staff_id) REFERENCES users(id),
   CONSTRAINT fk_orders_service FOREIGN KEY (service_id) REFERENCES services(id)
+  ,CONSTRAINT fk_orders_time_slot FOREIGN KEY (time_slot_id) REFERENCES time_slots(id)
 );
 
 CREATE TABLE IF NOT EXISTS reviews (
