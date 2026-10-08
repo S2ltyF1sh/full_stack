@@ -14,12 +14,18 @@ body {
   margin: auto;
   padding: 32px 28px 72px;
 }
-header, .section-title, .hero, .order-row {
+header,
+.section-title,
+.hero,
+.order-row {
   display: flex;
   align-items: center;
   justify-content: space-between;
 }
-h1, h2, h3, p {
+h1,
+h2,
+h3,
+p {
   margin: 0;
 }
 h1 {
@@ -27,7 +33,7 @@ h1 {
 }
 .eyebrow {
   font-size: 11px;
-  letter-spacing: .15em;
+  letter-spacing: 0.15em;
   color: #3b8b72;
   font-weight: 700;
   margin-bottom: 8px;
@@ -70,7 +76,7 @@ h1 {
 }
 .grid {
   display: grid;
-  grid-template-columns: 1.15fr .85fr;
+  grid-template-columns: 1.15fr 0.85fr;
   gap: 20px;
 }
 .panel {
@@ -83,7 +89,8 @@ h1 {
 h3 {
   font-size: 17px;
 }
-.ghost, .link {
+.ghost,
+.link {
   border: 0;
   background: none;
   color: #39866e;
@@ -119,7 +126,8 @@ h3 {
   place-items: center;
   color: #28735e;
 }
-.service small, .order-row small {
+.service small,
+.order-row small {
   display: block;
   color: #81918b;
   font-size: 12px;
@@ -161,7 +169,7 @@ h3 {
   background: #eff8f3;
 }
 .slots button:disabled {
-  opacity: .45;
+  opacity: 0.45;
   cursor: not-allowed;
 }
 .slots small {
@@ -178,7 +186,7 @@ h3 {
   cursor: pointer;
 }
 .primary:disabled {
-  opacity: .45;
+  opacity: 0.45;
   cursor: not-allowed;
 }
 .notice {
