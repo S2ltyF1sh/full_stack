@@ -3,35 +3,45 @@ CREATE DATABASE IF NOT EXISTS service_booking DEFAULT CHARACTER SET utf8mb4 COLL
 USE service_booking;
 
 CREATE TABLE IF NOT EXISTS users (
-  id BIGINT PRIMARY KEY AUTO_INCREMENT,
+  id BIGINT NOT NULL AUTO_INCREMENT,
   name VARCHAR(80) NOT NULL,
   role ENUM('CUSTOMER', 'STAFF', 'ADMIN') NOT NULL,
-  created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
+  created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  CONSTRAINT pk_users PRIMARY KEY (id),
+  CONSTRAINT uk_users_name_role UNIQUE (name, role)
 );
 
 CREATE TABLE IF NOT EXISTS services (
-  id BIGINT PRIMARY KEY AUTO_INCREMENT,
+  id BIGINT NOT NULL AUTO_INCREMENT,
   name VARCHAR(120) NOT NULL,
   price DECIMAL(10, 2) NOT NULL,
   duration_minutes INT NOT NULL,
   is_active BOOLEAN NOT NULL DEFAULT TRUE,
-  created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
+  created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  CONSTRAINT pk_services PRIMARY KEY (id),
+  CONSTRAINT uk_services_name UNIQUE (name)
 );
 
 CREATE TABLE IF NOT EXISTS time_slots (
-  id BIGINT PRIMARY KEY AUTO_INCREMENT,
+  id BIGINT NOT NULL AUTO_INCREMENT,
   service_id BIGINT NOT NULL,
   starts_at DATETIME NOT NULL,
   ends_at DATETIME NOT NULL,
   capacity INT NOT NULL DEFAULT 1,
   booked_count INT NOT NULL DEFAULT 0,
   is_available BOOLEAN NOT NULL DEFAULT TRUE,
+  created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  CONSTRAINT pk_time_slots PRIMARY KEY (id),
   CONSTRAINT fk_time_slots_service FOREIGN KEY (service_id) REFERENCES services(id),
+  KEY ix_time_slots_service (service_id),
   UNIQUE KEY uk_time_slots_service_start (service_id, starts_at)
 );
 
 CREATE TABLE IF NOT EXISTS orders (
-  id BIGINT PRIMARY KEY AUTO_INCREMENT,
+  id BIGINT NOT NULL AUTO_INCREMENT,
   customer_id BIGINT NOT NULL,
   staff_id BIGINT NULL,
   service_id BIGINT NOT NULL,
@@ -40,19 +50,30 @@ CREATE TABLE IF NOT EXISTS orders (
   scheduled_at DATETIME NOT NULL,
   total_amount DECIMAL(10, 2) NOT NULL,
   created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  CONSTRAINT pk_orders PRIMARY KEY (id),
   CONSTRAINT fk_orders_customer FOREIGN KEY (customer_id) REFERENCES users(id),
   CONSTRAINT fk_orders_staff FOREIGN KEY (staff_id) REFERENCES users(id),
-  CONSTRAINT fk_orders_service FOREIGN KEY (service_id) REFERENCES services(id)
-  ,CONSTRAINT fk_orders_time_slot FOREIGN KEY (time_slot_id) REFERENCES time_slots(id)
+  CONSTRAINT fk_orders_service FOREIGN KEY (service_id) REFERENCES services(id),
+  CONSTRAINT fk_orders_time_slot FOREIGN KEY (time_slot_id) REFERENCES time_slots(id),
+  KEY ix_orders_customer (customer_id),
+  KEY ix_orders_staff (staff_id),
+  KEY ix_orders_service (service_id),
+  KEY ix_orders_time_slot (time_slot_id),
+  CONSTRAINT uk_orders_customer_time_slot UNIQUE (customer_id, time_slot_id)
 );
 
 CREATE TABLE IF NOT EXISTS reviews (
-  id BIGINT PRIMARY KEY AUTO_INCREMENT,
-  order_id BIGINT NOT NULL UNIQUE,
+  id BIGINT NOT NULL AUTO_INCREMENT,
+  order_id BIGINT NOT NULL,
   customer_id BIGINT NOT NULL,
   rating TINYINT NOT NULL,
   comment VARCHAR(500),
   created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  CONSTRAINT pk_reviews PRIMARY KEY (id),
+  CONSTRAINT uk_reviews_order UNIQUE (order_id),
   CONSTRAINT fk_reviews_order FOREIGN KEY (order_id) REFERENCES orders(id),
-  CONSTRAINT fk_reviews_customer FOREIGN KEY (customer_id) REFERENCES users(id)
+  CONSTRAINT fk_reviews_customer FOREIGN KEY (customer_id) REFERENCES users(id),
+  KEY ix_reviews_customer (customer_id)
 );

@@ -5,7 +5,7 @@ import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "services")
+@Table(name = "services", uniqueConstraints = @UniqueConstraint(name = "uk_services_name", columnNames = "name"))
 public class ServiceItem {
 
     @Id
@@ -25,6 +25,9 @@ public class ServiceItem {
     private Boolean isActive = true;
 
     private LocalDateTime createdAt = LocalDateTime.now();
+
+    @Column(nullable = false)
+    private LocalDateTime updatedAt = LocalDateTime.now();
 
     public ServiceItem() {
     }
@@ -73,5 +76,9 @@ public class ServiceItem {
 
     public LocalDateTime getCreatedAt() {
         return createdAt;
+    }
+
+    public LocalDateTime getUpdatedAt() {
+        return updatedAt;
     }
 }

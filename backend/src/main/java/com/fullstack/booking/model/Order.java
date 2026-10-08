@@ -10,7 +10,7 @@ import java.util.Map;
 import java.util.Set;
 
 @Entity
-@Table(name = "orders")
+@Table(name = "orders", uniqueConstraints = @UniqueConstraint(name = "uk_orders_customer_time_slot", columnNames = {"customer_id", "time_slot_id"}))
 public class Order {
 
     @Id
@@ -44,6 +44,9 @@ public class Order {
     private BigDecimal totalAmount;
 
     private LocalDateTime createdAt = LocalDateTime.now();
+
+    @Column(nullable = false)
+    private LocalDateTime updatedAt = LocalDateTime.now();
 
     public enum Status {
         PENDING, ASSIGNED, IN_PROGRESS, COMPLETED, CANCELLED
@@ -135,5 +138,9 @@ public class Order {
 
     public LocalDateTime getCreatedAt() {
         return createdAt;
+    }
+
+    public LocalDateTime getUpdatedAt() {
+        return updatedAt;
     }
 }

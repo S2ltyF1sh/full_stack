@@ -4,7 +4,7 @@ import javax.persistence.*;
 import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "time_slots")
+@Table(name = "time_slots", uniqueConstraints = @UniqueConstraint(name = "uk_time_slots_service_start", columnNames = {"service_id", "starts_at"}))
 public class TimeSlot {
 
     @Id
@@ -29,6 +29,12 @@ public class TimeSlot {
 
     @Column(nullable = false)
     private Boolean isAvailable = true;
+
+    @Column(nullable = false)
+    private LocalDateTime createdAt = LocalDateTime.now();
+
+    @Column(nullable = false)
+    private LocalDateTime updatedAt = LocalDateTime.now();
 
     public TimeSlot() {
     }
@@ -89,5 +95,13 @@ public class TimeSlot {
 
     public void setIsAvailable(Boolean v) {
         isAvailable = v;
+    }
+
+    public LocalDateTime getCreatedAt() {
+        return createdAt;
+    }
+
+    public LocalDateTime getUpdatedAt() {
+        return updatedAt;
     }
 }
