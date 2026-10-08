@@ -7,3 +7,6 @@ target/
 .vscode/
 .idea/
 .DS_Store
+
+# 后端学习笔记/代码导读目录（仅本地阅读，不上传 Git）
+backend/test/
